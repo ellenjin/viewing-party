@@ -1,4 +1,5 @@
-#Assumption: all strings are in upper case
+#Assumption: all strings from input are in the expected case
+
 # ------------- WAVE 1 --------------------
 
 def create_movie(title, genre, rating):
@@ -12,20 +13,17 @@ def create_movie(title, genre, rating):
 
 def add_to_watched(user_data, movie):
     # assume user_data has key 'watched'
-
-    if movie in user_data["watched"]: # duplicate exists, all 3 key value matches
-        return user_data
-    user_data["watched"].append(movie)
-    return user_data
+    if movie not in user_data["watched"]: # check if duplicate exists, all 3 key values must match to be a duplicate
+        user_data["watched"].append(movie) # access this if the movie is NOT a duplicate
+    return user_data 
 
 def add_to_watchlist(user_data, movie):
-    if movie in user_data["watchlist"]:
-        return user_data
-    user_data["watchlist"].append(movie)
+    if movie not in user_data["watchlist"]: # if not a duplicate
+        user_data["watchlist"].append(movie)
     return user_data
 
 def watch_movie(user_data, title):
-    for movie in user_data["watchlist"]:
+    for movie in user_data["watchlist"]: # do we need to be concerned about modifying list as we're iterating?
         if movie["title"] == title:
             user_data["watchlist"].remove(movie)
             user_data["watched"].append(movie)
@@ -48,7 +46,7 @@ def get_watched_avg_rating(user_data):
     return total_rating / len(user_data["watched"])
 
 def get_most_watched_genre(user_data):
-    #check if watched list is empty
+    # check if watched list is empty
     if not user_data["watched"]:
         return None
     # create a dictionary to store genre and counts. 
@@ -96,6 +94,7 @@ def get_friends_unique_watched(user_data):
 # -----------------------------------------
 # ------------- WAVE 4 --------------------
 # -----------------------------------------
+
 def get_available_recs(user_data):
     movies = get_friends_unique_watched(user_data)
     for movie in movies:
@@ -103,7 +102,24 @@ def get_available_recs(user_data):
             movies.remove(movie)
         
     return movies
+
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
 # -----------------------------------------
 
+def get_new_rec_by_genre(user_data):
+    # In most frequently watched genre, find list of reccomended movies.
+    # Add to reccomended if:
+    #   - User has not watched
+    #   - One of friends have watched
+    #   - Genre of movie = user's most freq. watched
+    # Return list of reccomended movies
+    pass
+
+def get_rec_from_favorites(user_data):
+    # user_data["favorites"] = list of movies (dictionaries)
+    # Get list of reccomended movies if:
+    #   - movie in user's "favorites"
+    #   - user's friends have NOT watched (get_unique_watched)
+    # Return list of reccomended movies
+    pass
