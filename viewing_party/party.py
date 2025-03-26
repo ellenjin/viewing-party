@@ -2,8 +2,13 @@
 # Assumption: the movie 'rating' is an overall public rating, not personal (will be same for user/friend)
 
 # ------------- WAVE 1 --------------------
-
+#TC: O(1) ; SC: O(1) 
 def create_movie(title, genre, rating):
+    """
+    create a movie dict with three fields provided;
+    Parameters: title(str), genere(str), and rating(int);
+    Return dict
+    """
     if not title or not genre or not rating:
         return None
     return {
@@ -11,18 +16,36 @@ def create_movie(title, genre, rating):
         "genre": genre,
         "rating": rating
         }
-
+#TC: O(n) (search for value in a list); SC: O(1)
 def add_to_watched(user_data, movie):
-    if movie not in user_data["watched"]: # check if duplicate exists, all 3 key values must match to be a duplicate
+    """
+    Add a movie to user's watched list;
+    Parameter: user_data (dict), movie(dict);
+    Return user_data(dict)
+    """
+    if movie not in user_data["watched"]: 
         user_data["watched"].append(movie) 
     return user_data 
 
+#TC: O(n) (search for value in a list); SC: O(1)
 def add_to_watchlist(user_data, movie):
+    """
+    Add a movie to user's watchlist;
+    Parameter: user_data (dict), movie(dict);
+    Return user_data(dict)
+    """
     if movie not in user_data["watchlist"]: 
         user_data["watchlist"].append(movie)
     return user_data
 
+# TC: O(n^2) (O(n) for "in" operator; O(n) for .remove() method); SC: O(n)
+# n: length of user's watchlist
 def watch_movie(user_data, title):
+    """
+    Move a movie with a given title from user's watchlist to watched list; 
+    Parameter: user_data(dict), title(str)
+    Return: user_data(dict)    
+    """
     for movie in list(user_data["watchlist"]):
         if movie["title"] == title:
             user_data["watchlist"].remove(movie)
@@ -32,8 +55,13 @@ def watch_movie(user_data, title):
 # -----------------------------------------
 # ------------- WAVE 2 --------------------
 # -----------------------------------------
-
+# TC: O(n) (check presence of movie in a list); SC: O(1)
 def get_watched_avg_rating(user_data):
+    """
+    Find average rating for all movies in user's watched movie list
+    Parameters: user_data(dict)
+    Return: Average rating (float)
+    """
     # for empty list
     if not user_data["watched"]:
         return 0.0
@@ -45,7 +73,14 @@ def get_watched_avg_rating(user_data):
 
     return total_rating / len(user_data["watched"])
 
+#TC: O(n) (iterate through watchedlist) n - length of user's watchedlist;
+#SC: O(k) k - size of the genre_count dictionary
 def get_most_watched_genre(user_data):
+    """
+    Find the most watched genre in user's watched movie list;
+    Parameter: user_data(dict);
+    Return: most_watched_genre(str)
+    """
     # check if watched list is empty
     if not user_data["watched"]:
         return None
