@@ -110,18 +110,23 @@ def get_available_recs(user_data):
 # -----------------------------------------
 
 def get_new_rec_by_genre(user_data):
-    # In most frequently watched genre, find list of reccomended movies.
-    # Add to reccomended if:
-    #   - User has not watched
-    #   - One of friends have watched
-    #   - Genre of movie = user's most freq. watched
-    # Return list of reccomended movies
-    pass
+    # get a list of movies that only friends watched
+    movies = get_friends_unique_watched(user_data)
+    genre = get_most_watched_genre(user_data)
+    rec_movies = []
+
+    for movie in movies:
+        if movie["genre"] == genre:
+            rec_movies.append(movie)
+    return rec_movies
+
 
 def get_rec_from_favorites(user_data):
-    # user_data["favorites"] = list of movies (dictionaries)
-    # Get list of reccomended movies if:
-    #   - movie in user's "favorites"
-    #   - user's friends have NOT watched (get_unique_watched)
-    # Return list of reccomended movies
-    pass
+    # get user's unique watched movies
+    user_unique_movies = get_unique_watched(user_data)
+    rec_movies = []
+
+    for movie in user_data["favorites"]:
+        if movie in user_unique_movies:
+            rec_movies.append(movie)
+    return rec_movies
