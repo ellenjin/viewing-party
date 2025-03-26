@@ -1,4 +1,5 @@
-#Assumption: all strings from input are in the expected case
+# Assumption: all strings from input are in the expected case
+# Assumption: the movie 'rating' is an overall public rating, not personal (will be same for user/friend)
 
 # ------------- WAVE 1 --------------------
 
@@ -12,18 +13,17 @@ def create_movie(title, genre, rating):
         }
 
 def add_to_watched(user_data, movie):
-    # assume user_data has key 'watched'
     if movie not in user_data["watched"]: # check if duplicate exists, all 3 key values must match to be a duplicate
-        user_data["watched"].append(movie) # access this if the movie is NOT a duplicate
+        user_data["watched"].append(movie) 
     return user_data 
 
 def add_to_watchlist(user_data, movie):
-    if movie not in user_data["watchlist"]: # if not a duplicate
+    if movie not in user_data["watchlist"]: 
         user_data["watchlist"].append(movie)
     return user_data
 
 def watch_movie(user_data, title):
-    for movie in user_data["watchlist"]: # do we need to be concerned about modifying list as we're iterating?
+    for movie in list(user_data["watchlist"]):
         if movie["title"] == title:
             user_data["watchlist"].remove(movie)
             user_data["watched"].append(movie)
@@ -68,9 +68,8 @@ def get_most_watched_genre(user_data):
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
 
-def get_unique_watched(user_data):
+def get_unique_watched(user_data): 
     copy_of_user_data_watched = list(user_data['watched'])
-    # write a test later for same title movie, different rating
     for friend in user_data["friends"]:
         for movie in friend["watched"]:
             if movie in copy_of_user_data_watched:
@@ -105,6 +104,7 @@ def get_available_recs(user_data):
             movies_copy.remove(movie)
         
     return movies_copy
+
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
 # -----------------------------------------
@@ -120,9 +120,9 @@ def get_new_rec_by_genre(user_data):
             rec_movies.append(movie)
     return rec_movies
 
-
 def get_rec_from_favorites(user_data):
     # get user's unique watched movies
+    # Assumption: if a movie is in user's favorites, must also be in their 'watched'
     user_unique_movies = get_unique_watched(user_data)
     rec_movies = []
 
