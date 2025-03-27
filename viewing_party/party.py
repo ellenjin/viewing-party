@@ -16,6 +16,7 @@ def create_movie(title, genre, rating):
         "genre": genre,
         "rating": rating
         }
+
 #TC: O(n) (search for value in a list); SC: O(1)
 def add_to_watched(user_data, movie):
     """
@@ -80,15 +81,14 @@ def get_most_watched_genre(user_data):
     Find the most watched genre in user's watched movie list;
     Parameter: user_data(dict);
     Return: most_watched_genre(str)
+
+    Assumption: for multiple genres with same highest_count, return 1st appearance.
     """
-    # check if watched list is empty
     if not user_data["watched"]:
         return None
-    # create a dictionary to store genre and counts. 
-    genre_count = {}
+    genre_count = {} # dictionary to store genre and counts.
     highest_count = 0
     most_common_genre = ""
-    # assumption: for multiple genres with same highest_count, just return 1st appearance
     for movie in user_data["watched"]:
         if movie["genre"] in genre_count:
             genre_count[movie["genre"]] += 1
@@ -103,7 +103,17 @@ def get_most_watched_genre(user_data):
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
 
+# TC: O(n) + O(f * m)
+# n -- length of user['watched']
+# f -- number of friends
+# m -- average number of movies watched by each friend
+# SC: O(n)
 def get_unique_watched(user_data): 
+    """
+    Get the movies which the user has watched but their friends have not.
+    Parameter: user_data(dict)
+    Return: List of user's unique movies(list)
+    """
     copy_of_user_data_watched = list(user_data['watched'])
     for friend in user_data["friends"]:
         for movie in friend["watched"]:
@@ -112,6 +122,11 @@ def get_unique_watched(user_data):
     return copy_of_user_data_watched
 
 def get_friends_unique_watched(user_data):
+    """
+    Get the movies which the friends have watched, but user has not.
+    Parameter: user_data(dict)
+    Return: List of friends' unique movies(list)
+    """
     friends_unique_watched = []
     if not user_data["friends"]:
         return friends_unique_watched
@@ -130,6 +145,12 @@ def get_friends_unique_watched(user_data):
 # -----------------------------------------
 
 def get_available_recs(user_data):
+    """
+    Get a list of reccomended movies that that the user has not watched but a friend has. 
+    This movie must be hosted on one of the user's subscription services.
+    Parameters: user_data(dict)
+    Return: list of reccomended movies(list)
+    """
     movies = get_friends_unique_watched(user_data)
     movies_copy = list(movies)
     print(movies)
@@ -145,8 +166,13 @@ def get_available_recs(user_data):
 # -----------------------------------------
 
 def get_new_rec_by_genre(user_data):
-    # get a list of movies that only friends watched
-    movies = get_friends_unique_watched(user_data)
+    """
+    Get movies from the user's most frequently watched genre which the user has not watched,
+    but a friend has watched.
+    Parameters: user_data(dict)
+    Return: List of reccomended movies(list)
+    """
+    movies = get_friends_unique_watched(user_data) # movies that only friends watched
     genre = get_most_watched_genre(user_data)
     rec_movies = []
 
@@ -156,9 +182,14 @@ def get_new_rec_by_genre(user_data):
     return rec_movies
 
 def get_rec_from_favorites(user_data):
-    # get user's unique watched movies
-    # Assumption: if a movie is in user's favorites, must also be in their 'watched'
-    user_unique_movies = get_unique_watched(user_data)
+    """
+    Get movies from the user's favorite movies that have not been watched by any friends. 
+    Parameters: user_data(dict)
+    Return: List of reccomended movies(list)
+
+    Assumption: if a movie is in user's favorites, must also be in their watched (user_data["watched"])
+    """
+    user_unique_movies = get_unique_watched(user_data) # user's unique watched movies
     rec_movies = []
 
     for movie in user_data["favorites"]:
