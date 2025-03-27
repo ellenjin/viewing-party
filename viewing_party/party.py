@@ -121,6 +121,14 @@ def get_unique_watched(user_data):
                 copy_of_user_data_watched.remove(movie)
     return copy_of_user_data_watched
 
+
+# TC: O(f * m * (n + k))
+# SC: O(k)
+# f -- number of friends
+# m -- average number of movies watched by each friend
+# n -- length of user['watched']
+# k -- length of friends_unque_watched_movie
+
 def get_friends_unique_watched(user_data):
     """
     Get the movies which the friends have watched, but user has not.
@@ -129,7 +137,7 @@ def get_friends_unique_watched(user_data):
     """
     friends_unique_watched = []
     if not user_data["friends"]:
-        return friends_unique_watched
+        return []
     
     for friend in user_data["friends"]:
         if not friend["watched"]:
@@ -143,7 +151,13 @@ def get_friends_unique_watched(user_data):
 # -----------------------------------------
 # ------------- WAVE 4 --------------------
 # -----------------------------------------
-
+# TC: O(f * m * (n + k)) + O(k * l)
+# SC: O(k)
+# f -- number of friends
+# m -- average number of movies watched by each friend
+# n -- length of user['watched']
+# k -- length of friends_unque_watched_movie
+# l -- length of user_data's subscription list;
 def get_available_recs(user_data):
     """
     Get a list of reccomended movies that that the user has not watched but a friend has. 
