@@ -164,9 +164,9 @@ def get_friends_unique_watched(user_data):
         if not friend["watched"]:
             continue
         for movie in friend["watched"]:
-            if movie in friends_unique_watched:
-                continue
-            if not user_data["watched"] or movie not in user_data["watched"]:
+            if not user_data["watched"] or \
+                (movie not in user_data["watched"] and 
+                 movie not in friends_unique_watched):
                 friends_unique_watched.append(movie)
     return friends_unique_watched
 
@@ -189,20 +189,15 @@ def get_available_recs(user_data):
     Return: list of reccomended movies(list)
     """
     movies = get_friends_unique_watched(user_data)
-    movies_copy = list(movies)
-    print(movies)
-    for movie in movies:
-        if movie["host"] not in user_data["subscriptions"]:
-            print(movie, movie["host"])
-            movies_copy.remove(movie)
-        
-    return movies_copy
+    return [movie for movie in movies 
+            if movie["host"] in user_data["subscriptions"]]
 
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
 # -----------------------------------------
 # For the following two functions: 
-# TC and SC is the same as "get_unique_watched()"  as it is the main part of operations
+# TC and SC is the same as "get_unique_watched()" as it is the main 
+# part of operations
 # TC: O(n*f*m)
 # n -- length of user['watched']
 # f -- number of friends
