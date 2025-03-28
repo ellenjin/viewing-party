@@ -199,7 +199,13 @@ def get_available_recs(user_data):
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
 # -----------------------------------------
-
+# For the following two functions: 
+# TC and SC is the same as "get_unique_watched()"  as it is the main part of operations
+# TC: O(n*f*m)
+# n -- length of user['watched']
+# f -- number of friends
+# m -- average number of movies watched by each friend
+# SC: O(k) length of unique movies watched by user, worst case O(n)
 def get_new_rec_by_genre(user_data):
     """
     Get movies from the user's most frequently watched genre which the user has not watched,
