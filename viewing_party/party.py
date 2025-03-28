@@ -104,24 +104,44 @@ def get_most_watched_genre(user_data):
 # ------------- WAVE 3 --------------------
 # -----------------------------------------
 
-# TC: O(n) + O(f * m)
+# TC: O(n*f*m)
 # n -- length of user['watched']
 # f -- number of friends
 # m -- average number of movies watched by each friend
-# SC: O(n)
+# SC: O(k) length of unique movies watched by user, worst case O(n)
 def get_unique_watched(user_data): 
     """
     Get the movies which the user has watched but their friends have not.
     Parameter: user_data(dict)
     Return: List of user's unique movies(list)
     """
+    """
+    # older version:
     copy_of_user_data_watched = list(user_data['watched'])
     for friend in user_data["friends"]:
         for movie in friend["watched"]:
             if movie in copy_of_user_data_watched:
                 copy_of_user_data_watched.remove(movie)
     return copy_of_user_data_watched
-
+    """
+    #updated code 
+    # edge cases: empty watched list for user, or no friends;
+    if not user_data["watched"]:
+        return []
+    if not user_data["friends"]:
+        return user_data["watched"]
+    user_unique_watched = []
+    for movie in user_data["watched"]:
+        is_unique = True        
+        for friend in user_data["friends"]:
+            if not friend["watched"]:
+                continue
+            if movie in friend["watched"]:
+                is_unique = False
+                break
+        if is_unique:
+            user_unique_watched.append(movie) 
+    return user_unique_watched
 
 # TC: O(f * m * (n + k))
 # SC: O(k)
@@ -144,9 +164,9 @@ def get_friends_unique_watched(user_data):
         if not friend["watched"]:
             continue
         for movie in friend["watched"]:
-            if not user_data["watched"] or \
-                (movie not in user_data["watched"] and
-                 movie not in friends_unique_watched):
+            if movie in friends_unique_watched:
+                continue
+            if not user_data["watched"] or movie not in user_data["watched"]:
                 friends_unique_watched.append(movie)
     return friends_unique_watched
 
@@ -181,7 +201,13 @@ def get_available_recs(user_data):
 # -----------------------------------------
 # ------------- WAVE 5 --------------------
 # -----------------------------------------
-
+# For the following two functions: 
+# TC and SC is the same as "get_unique_watched()"  as it is the main part of operations
+# TC: O(n*f*m)
+# n -- length of user['watched']
+# f -- number of friends
+# m -- average number of movies watched by each friend
+# SC: O(k) length of unique movies watched by user, worst case O(n)
 def get_new_rec_by_genre(user_data):
     """
     Get movies from the user's most frequently watched genre which the user has 
